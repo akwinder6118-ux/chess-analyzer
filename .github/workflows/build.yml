@@ -1,0 +1,31 @@
+name: Build EXE
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: pip install pyinstaller python-chess pillow cairosvg
+
+    - name: Build exe
+      run: pyinstaller --onefile chess_analyzer.py
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4   # ✅ updated to v4
+      with:
+        name: ChessAnalyzer
+        path: dist/*
